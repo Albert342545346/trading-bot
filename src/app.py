@@ -1,63 +1,54 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
-import random
+# 
+# 
+# 
+# 
+
+from PyQt5.QtWidgets import QStackedWidget, QMainWindow, QApplication
 
 
-class StockPredictionApp(QMainWindow):
+from LoginPage import LoginPage
+from MainPage import MainPage
+
+
+
+class MainWindow(QMainWindow):
     def __init__(self):
-        super(StockPredictionApp, self).__init__()
+        super().__init__()
 
-        self.setWindowTitle('Stock Prediction App')
+        self.setWindowTitle("Пример QStackedWidget с разными классами QWidget")
+        self.setGeometry(100, 100, 400, 300)
 
-        self.central_widget = QWidget(self)
-        self.setCentralWidget(self.central_widget)
+        # Создаем QStackedWidget
+        self.navigator = QStackedWidget()
 
-        self.layout = QVBoxLayout(self.central_widget)
+        # Создаем экземпляры классов QWidget
+        page1 = LoginPage()
+        page2 = MainPage()
 
-        # Создаем виджет для графика Matplotlib
-        self.canvas = FigureCanvas(Figure(figsize=(8, 5)))
-        self.layout.addWidget(self.canvas)
+        # Добавляем виджеты в QStackedWidget
+        self.navigator.addWidget(page1)
+        self.navigator.addWidget(page2)
 
-        # Получаем объект оси графика
-        self.ax = self.canvas.figure.add_subplot(111)
+        # Устанавливаем QStackedWidget в качестве центрального виджета
+        self.setCentralWidget(self.navigator)
 
-        # Инициализация данных
-        self.x_data = []
-        self.y_data = []
+        page1.page.connect(self.show_login)
+        page2.page.connect(self.show_main)
 
-        # Инициализация линии графика
-        self.line, = self.ax.plot([], [], 'ro-')
+    def show_login(self):
+        self.navigator.setCurrentIndex(1)
+        
+    def show_main(self):
+        self.navigator.setCurrentIndex(0)
 
-        # Создаем анимацию для обновления графика
-        self.animation = self.canvas.figure.canvas.new_timer(interval=1000)
-        self.animation.add_callback(self.update_plot)
-        self.animation.start()
-
-    def update_plot(self):
-        # Добавляем новые данные
-        self.x_data.append(len(self.x_data) + 1)
-        self.y_data.append(random.randint(1, 10))
-
-        # Очищаем предыдущий график и рисуем новый
-        self.ax.clear()
-        self.ax.plot(self.x_data, self.y_data, 'ro-')
-
-        # Настройка внешнего вида графика
-        self.ax.set_xlabel('Time')
-        self.ax.set_ylabel('Stock Price')
-        self.ax.set_title('Stock Price Prediction')
-
-        # Обновляем виджет
-        self.canvas.draw()
-
-
-def main():
-    app = QApplication(sys.argv)
-    stock_app = StockPredictionApp()
-    stock_app.show()
-    sys.exit(app.exec_())
-
+# сработает только при запуске файла
+# не сработает при импорте из других файлов
 if __name__ == '__main__':
-    main()
+    
+    app = QApplication([])
+    main_win = MainWindow()
+    main_win.show()
+    app.exec_()
+    
+    
+    
