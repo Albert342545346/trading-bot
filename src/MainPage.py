@@ -1,8 +1,8 @@
-from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QVBoxLayout, QWidget
 from PyQt5.QtCore import pyqtSignal
 import sys
 
-from graph import Graf
+from graph import Graf, Bar
 
 class MainPage(QWidget):
     page = pyqtSignal()
@@ -11,8 +11,12 @@ class MainPage(QWidget):
         super().__init__()
         layout = QVBoxLayout(self)
         
-        grafic = Graf()
+        grafic = Bar({"Apple":10, "Amazon": 20, "Microsoft":50})
+        
         layout.addWidget(grafic)
+        
+    def start(self):
+        pass
         
 
 if __name__=="__main__":

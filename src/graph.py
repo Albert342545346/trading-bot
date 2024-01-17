@@ -5,7 +5,7 @@ from matplotlib.figure import Figure
 import random
 
 class Graf(QWidget):
-    def __init__(self):
+    def __init__(self, name:str="Название акции"):
         '''
         
         '''
@@ -17,7 +17,7 @@ class Graf(QWidget):
         
         self.axLine:str = "Время"
         self.ayLine:str = "Курс акции"
-        self.titleGraf:str = "Акции"
+        self.titleGraf:str = name
         
         # инициализируем осоновные моменты для отображения графика
         self.initUI()
@@ -66,3 +66,40 @@ class Graf(QWidget):
 
         # Обновляем виджет
         self.canvas.draw()
+        
+        
+
+# построение столбчатого графика (диаграммы)
+class Bar(QWidget):
+    def __init__(self, data:dict):
+        super().__init__()
+        
+        # данные для построения столбчатого графика
+        self.data = data
+        
+        self.initUI()
+        
+    def initUI(self):
+
+        self.layout = QVBoxLayout(self)
+
+        # Создаем виджет для отображения графика
+        self.canvas = FigureCanvas(Figure())
+        self.layout.addWidget(self.canvas)
+
+        self.plot()
+        
+    def plot(self):
+        # Извлекаем ключи и значения из словаря
+        categories = list(self.data.keys())
+        values = list(self.data.values())
+        
+        figure = self.canvas.figure
+        ax = figure.add_subplot(111)
+
+        ax.bar(categories, values, color='black')
+
+        # Обновляем виджет для отображения изменений
+        self.canvas.draw()
+    
+    

@@ -3,8 +3,8 @@
 # 
 # 
 
-from PyQt5.QtWidgets import QStackedWidget, QMainWindow, QApplication
-
+from PyQt5.QtWidgets import QStackedWidget, QMainWindow, QApplication, QDesktopWidget
+from PyQt5.QtGui import QIcon
 
 from LoginPage import LoginPage
 from MainPage import MainPage
@@ -15,12 +15,12 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Пример QStackedWidget с разными классами QWidget")
-        self.setGeometry(100, 100, 400, 300)
-
+        self.mainSize = (600, 400)
+        self.title = "TradingBot"
+        self.icon=""
+        
         # Создаем QStackedWidget
         self.navigator = QStackedWidget()
-
         # Создаем экземпляры классов QWidget
         page1 = LoginPage()
         page2 = MainPage()
@@ -34,6 +34,21 @@ class MainWindow(QMainWindow):
 
         page1.page.connect(self.show_login)
         page2.page.connect(self.show_main)
+        
+        self.InitHead()
+
+    def InitHead(self):
+        self.setWindowTitle(self.title)
+        self.setWindowIcon(QIcon(self.icon))
+        self.setGeometry(100, 100, *self.mainSize)
+        
+        # Отцентровка приложения по координтам
+        screen = QDesktopWidget().screenGeometry()
+        size = self.geometry()
+        x = (screen.width() - size.width()) // 2
+        y = (screen.height() - size.height()) // 2
+        self.move(x, y)
+        
 
     def show_login(self):
         self.navigator.setCurrentIndex(1)

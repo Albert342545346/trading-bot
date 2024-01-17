@@ -1,66 +1,46 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
-from PyQt5.QtCore import QTimer
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import numpy as np
+from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QLabel, QSpacerItem, QSizePolicy
 
-class MyMainWindow(QMainWindow):
+class MyApp(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Пример с столбчатым графиком в PyQt5 и Matplotlib")
-        self.setGeometry(100, 100, 800, 600)
+        self.initUI()
 
-        # Создаем виджет для отображения графика
-        self.graph_widget = GraphWidget(self)
-        self.setCentralWidget(self.graph_widget)
+    def initUI(self):
+        grid_layout = QGridLayout(self)
 
-        # Запускаем таймер для добавления случайных точек
-        self.graph_widget.start_timer()
+        # Виджет 1
+        button1 = QPushButton('Виджет 1', self)
+        grid_layout.addWidget(button1, 0, 0)
 
-class GraphWidget(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+        # Виджет 2
+        button2 = QPushButton('Виджет 2', self)
+        grid_layout.addWidget(button2, 0, 1)
 
-        # Создаем графический объект и виджет для отображения
-        self.figure, self.ax = plt.subplots()
-        self.canvas = FigureCanvas(self.figure)
+        # Пустая ячейка
+        spacer_item = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        grid_layout.addItem(spacer_item, 0, 2)
 
-        # Создаем макет и добавляем виджет с графиком
-        layout = QVBoxLayout(self)
-        layout.addWidget(self.canvas)
+        # Виджет 3
+        button3 = QPushButton('Виджет 3', self)
+        grid_layout.addWidget(button3, 0, 3)
 
-        # Инициализируем данные для графика
-        self.categories = np.arange(1, 11)
-        self.values = np.random.rand(10)
+        # Пустая ячейка
+        spacer_item = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        grid_layout.addItem(spacer_item, 1, 0)
 
-        # Построение начального столбчатого графика
-        self.bar_container = self.ax.bar(self.categories, self.values)
-        self.ax.set_xlabel('Категории')
-        self.ax.set_ylabel('Значения')
+        # Виджет 4
+        label4 = QLabel('Виджет 4', self)
+        grid_layout.addWidget(label4, 1, 1)
 
-        # Инициализируем таймер
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_bar_chart)
+        self.setLayout(grid_layout)
 
-    def update_bar_chart(self):
-        # Обновление значений столбцов
-        self.values = np.random.rand(10)
+        self.setWindowTitle('Пример приложения с GridLayout')
+        self.setGeometry(100, 100, 400, 300)
 
-        # Обновление данных в столбчатом графике
-        for bar, value in zip(self.bar_container, self.values):
-            bar.set_height(value)
-
-        # Перерисовка графика
-        self.canvas.draw()
-
-    def start_timer(self):
-        # Запуск таймера с интервалом 1000 миллисекунд (1 секунда)
-        self.timer.start(1000)
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    main_win = MyMainWindow()
-    main_win.show()
+    window = MyApp()
+    window.show()
     sys.exit(app.exec_())
