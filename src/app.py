@@ -15,7 +15,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.mainSize = (600, 400)
+        self.mainSize = (960, 540)
         self.title = "TradingBot"
         self.icon=""
         
@@ -41,6 +41,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(self.title)
         self.setWindowIcon(QIcon(self.icon))
         self.setGeometry(100, 100, *self.mainSize)
+        # фиксируем настройки окна
+        self.setFixedSize(*self.mainSize)
         
         # Отцентровка приложения по координтам
         screen = QDesktopWidget().screenGeometry()

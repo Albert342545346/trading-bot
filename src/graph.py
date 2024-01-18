@@ -4,6 +4,10 @@ from matplotlib.figure import Figure
 
 import random
 
+
+MAXCOUNTPOINT = 10
+
+
 class Graf(QWidget):
     def __init__(self, name:str="Название акции"):
         '''
@@ -54,7 +58,11 @@ class Graf(QWidget):
         # Добавляем новые данные
         self.x_data.append(len(self.x_data) + 1)
         self.y_data.append(random.randint(1, 10))
-
+        
+        if len(self.x_data) >= MAXCOUNTPOINT:
+            del self.x_data[0]
+            
+        
         # Очищаем предыдущий график и рисуем новый
         self.ax.clear()
         self.ax.plot(self.x_data, self.y_data, 'ro-')

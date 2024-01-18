@@ -31,7 +31,7 @@ class ProfileApp(QWidget):
 
         # Пример текстового блока с дополнительной информацией
         additional_info_text = QLabel('Привет! Это мой пример профиля пользователя. '
-                                      'Здесь вы можете внести свои данные.', self)
+                                    'Здесь вы можете внести свои данные.', self)
         layout.addWidget(additional_info_text)
 
         self.setLayout(layout)

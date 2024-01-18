@@ -4,8 +4,9 @@
 # 
 
 
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import Qt
 import sys
 
 # импорт файла с базой данных 
@@ -68,6 +69,11 @@ class LoginPage(QWidget):
         
         layout.addWidget(self.login_button)
         layout.addWidget(self.register_button)
+        
+        layout.setAlignment(self.username_input, Qt.AlignHCenter)
+        layout.setAlignment(self.password_input, Qt.AlignHCenter)
+        layout.setAlignment(self.login_button, Qt.AlignHCenter)
+        layout.setAlignment(self.register_button, Qt.AlignHCenter)
 
         self.setLayout(layout)
 
@@ -80,7 +86,6 @@ class LoginPage(QWidget):
         password = self.password_input.text()
 
         if username in getUsers() and password==getPassword(username):
-            QMessageBox.information(self, "Успех", "Вы успешно авторизовались!")
             # переходим на другое окно - ДОМ
             self.page.emit()
         else:
