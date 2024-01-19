@@ -1,46 +1,34 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QLabel, QSpacerItem, QSizePolicy
+import requests
 
-class MyApp(QWidget):
-    def __init__(self):
-        super().__init__()
+def get_trading_data(api_url, api_key):
+    try:
+        # Устанавливаем заголовок с ключом API
+        headers = {
+            'apikey': api_key
+            # Замените 'Bearer' на необходимый тип авторизации, если это отличается
+        }
 
-        self.initUI()
+        # Выполняем GET-запрос к API площадки с заголовками
+        response = requests.get(api_url, headers=headers)
 
-    def initUI(self):
-        grid_layout = QGridLayout(self)
+        # Проверяем успешность запроса (код 200 означает успешный запрос)
+        if response.status_code == 200:
+            # Возвращаем JSON-данные
+            return response.json()
+        else:
+            # Если запрос не успешен, выводим сообщение об ошибке
+            print(f"Ошибка запроса: {response.status_code}")
+            return None
 
-        # Виджет 1
-        button1 = QPushButton('Виджет 1', self)
-        grid_layout.addWidget(button1, 0, 0)
+    except Exception as e:
+        print(f"Произошла ошибка: {str(e)}")
+        return None
 
-        # Виджет 2
-        button2 = QPushButton('Виджет 2', self)
-        grid_layout.addWidget(button2, 0, 1)
+# Пример использования: замените 'YOUR_API_URL' и 'YOUR_API_KEY' на реальные значения
+api_url = 'https://www.alphavantage.co/query'
+api_key = 'THimd3l6HiLDEikzgzRTBVaR5uSuVpBR'
+trading_data = get_trading_data(api_url, api_key)
 
-        # Пустая ячейка
-        spacer_item = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        grid_layout.addItem(spacer_item, 0, 2)
-
-        # Виджет 3
-        button3 = QPushButton('Виджет 3', self)
-        grid_layout.addWidget(button3, 0, 3)
-
-        # Пустая ячейка
-        spacer_item = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        grid_layout.addItem(spacer_item, 1, 0)
-
-        # Виджет 4
-        label4 = QLabel('Виджет 4', self)
-        grid_layout.addWidget(label4, 1, 1)
-
-        self.setLayout(grid_layout)
-
-        self.setWindowTitle('Пример приложения с GridLayout')
-        self.setGeometry(100, 100, 400, 300)
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = MyApp()
-    window.show()
-    sys.exit(app.exec_())
+# Выводим полученные данные (если запрос был успешен)
+if trading_data:
+    print(trading_data)
