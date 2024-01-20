@@ -9,7 +9,7 @@ MAXCOUNTPOINT = 10
 
 
 class Graf(QWidget):
-    def __init__(self, name:str="Название акции"):
+    def __init__(self, name:str="Название акции", array:list=[]):
         '''
         
         '''
@@ -22,6 +22,8 @@ class Graf(QWidget):
         self.axLine:str = "Время"
         self.ayLine:str = "Курс акции"
         self.titleGraf:str = name
+        
+        self.array = array
         
         # инициализируем осоновные моменты для отображения графика
         self.initUI()
@@ -54,7 +56,6 @@ class Graf(QWidget):
         self.animation.start()
         
     def update(self):
-        
         # Добавляем новые данные
         self.x_data.append(len(self.x_data) + 1)
         self.y_data.append(random.randint(1, 10))

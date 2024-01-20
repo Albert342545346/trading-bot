@@ -1,66 +1,47 @@
-# 
-# 
-# 
-# 
-
-from PyQt5.QtWidgets import QStackedWidget, QMainWindow, QApplication, QDesktopWidget
+from PyQt5.QtWidgets import QVBoxLayout, QMainWindow, QApplication, QDesktopWidget
 from PyQt5.QtGui import QIcon
 
-from LoginPage import LoginPage
-from MainPage import MainPage
-
+from getdata import getDataFromServer
+from graph import Graf, Bar
+from database import *
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
-        super().__init__()
-
-        self.mainSize = (960, 540)
-        self.title = "TradingBot"
-        self.icon=""
+        super(MainWindow, self).__init__()
         
-        # Создаем QStackedWidget
-        self.navigator = QStackedWidget()
-        # Создаем экземпляры классов QWidget
-        page1 = LoginPage()
-        page2 = MainPage()
-
-        # Добавляем виджеты в QStackedWidget
-        self.navigator.addWidget(page1)
-        self.navigator.addWidget(page2)
-
-        # Устанавливаем QStackedWidget в качестве центрального виджета
-        self.setCentralWidget(self.navigator)
-
-        page1.page.connect(self.show_login)
-        page2.page.connect(self.show_main)
+        self.WindowSize = (1200, 700)
+        self.title = "Trading-Bot"
         
-        self.InitHead()
-
-    def InitHead(self):
+        
+        self.initHead()
+        self.initUI()
+    
+    
+    def initHead(self):
+        
+        self.setGeometry(100, 100,*self.WindowSize)
         self.setWindowTitle(self.title)
-        self.setWindowIcon(QIcon(self.icon))
-        self.setGeometry(100, 100, *self.mainSize)
-        # фиксируем настройки окна
-        self.setFixedSize(*self.mainSize)
         
-        # Отцентровка приложения по координтам
-        screen = QDesktopWidget().screenGeometry()
-        size = self.geometry()
-        x = (screen.width() - size.width()) // 2
-        y = (screen.height() - size.height()) // 2
-        self.move(x, y)
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.frameGeometry()
+        window_geometry.moveCenter(screen_geometry.center())
+        self.move(window_geometry.topLeft())
+    
+    def initUI(self):
+        k = Bar({"apple":100, "microsoft": 12})
         
+        layout = QVBoxLayout()
+        
+        layout.addWidget(k)
+        
+        self.setLayout(layout)
 
-    def show_login(self):
-        self.navigator.setCurrentIndex(1)
-        
-    def show_main(self):
-        self.navigator.setCurrentIndex(0)
 
-# сработает только при запуске файла
-# не сработает при импорте из других файлов
+
+
 if __name__ == '__main__':
+    createData()
     
     app = QApplication([])
     main_win = MainWindow()

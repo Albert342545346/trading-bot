@@ -1,34 +1,53 @@
-import requests
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
 
-def get_trading_data(api_url, api_key):
-    try:
-        # Устанавливаем заголовок с ключом API
-        headers = {
-            'apikey': api_key
-            # Замените 'Bearer' на необходимый тип авторизации, если это отличается
-        }
+class DataTableWidget(QTableWidget):
+    def __init__(self, data, parent=None):
+        super(DataTableWidget, self).__init__(parent)
+        self.load_data(data)
 
-        # Выполняем GET-запрос к API площадки с заголовками
-        response = requests.get(api_url, headers=headers)
+    def load_data(self, data):
+        if not data:
+            return
 
-        # Проверяем успешность запроса (код 200 означает успешный запрос)
-        if response.status_code == 200:
-            # Возвращаем JSON-данные
-            return response.json()
-        else:
-            # Если запрос не успешен, выводим сообщение об ошибке
-            print(f"Ошибка запроса: {response.status_code}")
-            return None
+        rows = len(data)
+        columns = len(data[0])
 
-    except Exception as e:
-        print(f"Произошла ошибка: {str(e)}")
-        return None
+        self.setRowCount(rows)
+        self.setColumnCount(columns)
+        header_labels = data[0]
 
-# Пример использования: замените 'YOUR_API_URL' и 'YOUR_API_KEY' на реальные значения
-api_url = 'https://www.alphavantage.co/query'
-api_key = 'THimd3l6HiLDEikzgzRTBVaR5uSuVpBR'
-trading_data = get_trading_data(api_url, api_key)
+        self.setHorizontalHeaderLabels(header_labels)
 
-# Выводим полученные данные (если запрос был успешен)
-if trading_data:
-    print(trading_data)
+        for row_index, row_data in enumerate(data[1:]):
+            for col_index, cell_data in enumerate(row_data):
+                item = QTableWidgetItem(str(cell_data))
+                self.setItem(row_index, col_index, item)
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__()
+
+        # Пример данных в виде обычного массива с именами столбцов
+        data_array = [
+            ["Name", "Age", "Country"],
+            ["John", 30, "USA"],
+            ["Anna", 25, "Canada"],
+            ["Mike", 35, "UK"],
+        ]
+
+        self.data_table_widget = DataTableWidget(data_array, self)
+
+        central_widget = QWidget()
+        layout = QVBoxLayout(central_widget)
+        layout.addWidget(self.data_table_widget)
+
+        self.setCentralWidget(central_widget)
+        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle('Data Table Viewer')
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    mainWin = MainWindow()
+    mainWin.show()
+    sys.exit(app.exec_())
