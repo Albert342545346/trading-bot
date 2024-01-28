@@ -57,3 +57,9 @@ def getDataFromServer(name):
                 "day": latest_time
                 }
     return {}
+
+def writeFile(filepath, data):
+    with open("data.json", 'w')
+
+if __name__=="__main__":
+    print(getDataFromServer("Tesla"))
